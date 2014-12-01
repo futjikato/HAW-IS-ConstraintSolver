@@ -91,8 +91,6 @@ func (c *Constraint) Check() {
 }
 
 func (c *Constraint) Resolve() {
-	c.Check()
-
 	leftIter := c.Left.getValueIterator()
 	for i := 0; i < len(c.Left.Values); i++ {
 		leftVal := leftIter()
@@ -109,5 +107,27 @@ func (c *Constraint) Resolve() {
 			c.Right.Result = rightVal
 			break
 		}
+	}
+}
+
+type Network struct {
+	Constraints []*Constraint
+}
+
+func (n *Network) AddConstraint(c *Constraint) {
+	if n.Constraints == nil {
+		n.Constraints = make([]*Constraint, 0)
+	}
+
+	n.Constraints = append(n.Constraints, c)
+}
+
+func (n *Network) Resolve() {
+	for i := 0; i < len(n.Constraints); i++ {
+		n.Constraints[i].Check()
+	}
+
+	for i := 0; i < len(n.Constraints); i++ {
+		n.Constraints[i].Resolve()
 	}
 }
