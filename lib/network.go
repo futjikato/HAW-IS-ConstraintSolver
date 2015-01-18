@@ -30,7 +30,7 @@ func (n *Network) AllDifferent(nvars ...*Variable) {
   }
   for i := 0; i < len(nvars); i++ {
     for j := 0; j < len(nvars); j++ {
-      if j > i {
+      if(i != j) {
         c := new(Constraint)
         c.Left = nvars[i]
         c.Right = nvars[j]
@@ -62,14 +62,17 @@ func (n *Network) Resolve() {
 }
 
 func (n *Network) iterSolve(stack *list.List) bool {
+  fmt.Println("iterSolve")
   if !n.doAC3LA(stack) {
     return false
   }
 
-  for v := n.getVariableWithoutDecision() ; v != nil ; v = n.getVariableWithoutDecision() {
+  v := n.getVariableWithoutDecision()
+  for v != nil {
     availableValues := v.Values
     for _, vv := range availableValues {
       backup := n.backup()
+      fmt.Println("set", v.Name, vv)
       v.Values = append(v.Values[:0], vv)
       innerStack := list.New()
       connected := n.getConstraintsWithVariable(v)
@@ -77,9 +80,11 @@ func (n *Network) iterSolve(stack *list.List) bool {
       if n.iterSolve(innerStack) {
         return true
       } else {
+        fmt.Print("restore")
         n.restore(backup)
       }
     }
+    v = n.getVariableWithoutDecision()
   }
 
   return true
@@ -90,16 +95,15 @@ func (n *Network) doAC3LA(stack *list.List) bool {
   for stack.Len() > 0 && hasValues {
     e := stack.Front()
     stack.Remove(e)
-    fmt.Print("-")
 
     var c *Constraint
     c = e.Value.(*Constraint)
 
     if c.ArcReduce() {
       neighbors := n.getNeighbors(c)
-      fmt.Print("+")
       stack.PushFrontList(neighbors)
       hasValues = c.Left.hasValues()
+      fmt.Println("reduced and has value", hasValues);
     }
   }
 

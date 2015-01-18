@@ -1,7 +1,5 @@
 package constraint
 
-import "fmt"
-
 type Operation interface {
 	validate(a interface{}, b interface{}) bool
 }
@@ -31,7 +29,6 @@ func (c *Constraint) ArcReduce() bool {
 
 		// if none is found rmove that left value
 		if !hasPartner {
-			fmt.Print("c")
 			hasChanged = true
 			c.Left.Values = append(c.Left.Values[:i], c.Left.Values[i+1:]...)
 		}

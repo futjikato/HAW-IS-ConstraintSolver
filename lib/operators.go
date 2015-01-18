@@ -1,5 +1,7 @@
 package constraint
 
+import "math"
+
 /**
  * Equal operator
  */
@@ -29,4 +31,20 @@ func (o *OperationGreater) validate(a interface{}, b interface{}) bool {
   bNum := b.(int)
 
   return aNum > bNum
+}
+
+type OperationLinksNeben struct{}
+func (o *OperationLinksNeben) validate(a interface{}, b interface{}) bool {
+  aNum := a.(int)
+  bNum := b.(int)
+  return aNum - 1 == bNum
+}
+
+type OperationNachbar struct{}
+func (o *OperationNachbar) validate(a interface{}, b interface{}) bool {
+  aNum := a.(int)
+  bNum := b.(int)
+  aFloat := float64(aNum)
+  bFloat := float64(bNum)
+  return math.Abs(aFloat - bFloat) == 1
 }
