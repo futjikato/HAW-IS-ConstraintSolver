@@ -1,6 +1,6 @@
 package main
 
-import "constraint"
+import "github.com/futjikato/Constraints/lib"
 import "fmt"
 
 func main() {
