@@ -6,6 +6,7 @@ import "container/list"
 type Network struct {
   Constraints []*Constraint
   Variables []*Variable
+  deathCount int
 }
 
 func (n *Network) AddVariable(v *Variable) {
@@ -67,8 +68,10 @@ func (n *Network) iterSolve(stack *list.List) bool {
     return false
   }
 
-  v := n.getVariableWithoutDecision()
-  for v != nil {
+  k := n.getVariableWithoutDecision(0)
+  for k != -1 {
+    v := n.Variables[k]
+    fmt.Println("got", v.Name, "as variable to setup next")
     availableValues := v.Values
     for _, vv := range availableValues {
       backup := n.backup()
@@ -80,11 +83,11 @@ func (n *Network) iterSolve(stack *list.List) bool {
       if n.iterSolve(innerStack) {
         return true
       } else {
-        fmt.Print("restore")
+        fmt.Println("Restore")
         n.restore(backup)
       }
     }
-    v = n.getVariableWithoutDecision()
+    return false
   }
 
   return true
@@ -103,7 +106,7 @@ func (n *Network) doAC3LA(stack *list.List) bool {
       neighbors := n.getNeighbors(c)
       stack.PushFrontList(neighbors)
       hasValues = c.Left.hasValues()
-      fmt.Println("reduced and has value", hasValues);
+      fmt.Println("reduced ", c.Left.Name, "and has value", hasValues);
     }
   }
 
@@ -132,14 +135,15 @@ func (n *Network) getConstraintsWithVariable(v *Variable) *list.List {
   return connected
 }
 
-func (n *Network) getVariableWithoutDecision() *Variable {
-  for _, v := range n.Variables {
+func (n *Network) getVariableWithoutDecision(i int) int {
+  for k, v := range n.Variables[i:] {
     if len(v.Values) > 1 {
-      return v
+      fmt.Println(v.Name, "has", v.Values)
+      return k
     }
   }
 
-  return nil
+  return -1
 }
 
 func (n *Network) backup() []interface{} {
