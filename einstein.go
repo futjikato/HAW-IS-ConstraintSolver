@@ -253,4 +253,26 @@ func main() {
   fmt.Println("Deutscher", deutscher.Values)
 
   fmt.Println("\nFisch", fisch.Values)
+  fmt.Println("Vogel", vogel.Values)
+  fmt.Println("Hund", hund.Values)
+  fmt.Println("Katze", katze.Values)
+  fmt.Println("Pferd", pferd.Values)
+
+  fmt.Println("\nBlau", blau.Values)
+  fmt.Println("Rot", rot.Values)
+  fmt.Println("Grün", gruen.Values)
+  fmt.Println("Weiß", weiss.Values)
+  fmt.Println("Gelb", gelb.Values)
+
+  fmt.Println("\nTee", tee.Values)
+  fmt.Println("Kaffee", kaffee.Values)
+  fmt.Println("Milch", milch.Values)
+  fmt.Println("Bier", bier.Values)
+  fmt.Println("Wasser", wasser.Values)
+
+  fmt.Println("\nPall Mall", pallmall.Values)
+  fmt.Println("Dunhill", dunhill.Values)
+  fmt.Println("Malboro", malboro.Values)
+  fmt.Println("Rothmanns", rothmanns.Values)
+  fmt.Println("Winfield", winfield.Values)
 }
